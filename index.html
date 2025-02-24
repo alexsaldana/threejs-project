@@ -19,11 +19,18 @@
         function init() {
             // 1. Create Scene
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xffffff); // Set background to white
 
-            // 2. Load an Environment Map (HDRI for Reflections)
-            const loader = new THREE.TextureLoader();
-            const envMap = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
+            // 2. Load an HDRI Environment Map (for softer reflections)
+            const loader = new THREE.CubeTextureLoader();
+            const envMap = loader.load([
+                'https://threejs.org/examples/textures/cube/Park2/px.jpg', // Right
+                'https://threejs.org/examples/textures/cube/Park2/nx.jpg', // Left
+                'https://threejs.org/examples/textures/cube/Park2/py.jpg', // Top
+                'https://threejs.org/examples/textures/cube/Park2/ny.jpg', // Bottom
+                'https://threejs.org/examples/textures/cube/Park2/pz.jpg', // Front
+                'https://threejs.org/examples/textures/cube/Park2/nz.jpg'  // Back
+            ]);
+            scene.background = envMap;
             scene.environment = envMap;
 
             // 3. Create Camera
@@ -36,22 +43,22 @@
             renderer.shadowMap.enabled = true;
             document.body.appendChild(renderer.domElement);
 
-            // 5. Add Better Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 4); // Brighter Global Light
+            // 5. Add Balanced Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 6); // Soft global light
             scene.add(ambientLight);
 
-            const dirLight1 = new THREE.DirectionalLight(0xffffff, 4);
-            dirLight1.position.set(10, 10, 10);
-            dirLight1.castShadow = true;
-            scene.add(dirLight1);
+            const keyLight = new THREE.DirectionalLight(0xffffff, 5);
+            keyLight.position.set(10, 20, 10);
+            keyLight.castShadow = true;
+            scene.add(keyLight);
 
-            const dirLight2 = new THREE.DirectionalLight(0xffffff, 2);
-            dirLight2.position.set(-10, 10, -10);
-            scene.add(dirLight2);
+            const fillLight = new THREE.DirectionalLight(0xffffff, 3);
+            fillLight.position.set(-10, 10, 10);
+            scene.add(fillLight);
 
-            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 3);
-            hemiLight.position.set(0, 20, 0);
-            scene.add(hemiLight);
+            const backLight = new THREE.DirectionalLight(0xffffff, 2);
+            backLight.position.set(0, -10, -10);
+            scene.add(backLight);
 
             // 6. Setup GLTFLoader & DRACOLoader
             const gltfLoader = new THREE.GLTFLoader();
@@ -71,9 +78,9 @@
                             node.castShadow = true;
                             node.receiveShadow = true;
                             if (node.material) {
-                                node.material.envMapIntensity = 2; // Increase reflections
-                                node.material.metalness = 1; // Ensure metal reflects
-                                node.material.roughness = 0.3; // Slight shine
+                                node.material.envMapIntensity = 0.8; // Reduce harsh reflections
+                                node.material.metalness = 0.9; // Keep it metallic
+                                node.material.roughness = 0.5; // Make reflections softer
                             }
                         }
                     });
@@ -89,7 +96,7 @@
                 }
             );
 
-            // 8. Enable Orbit Controls
+            // 8. Enable Orbit Controls (Mouse Interaction)
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
