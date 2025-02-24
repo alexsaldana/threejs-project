@@ -47,7 +47,7 @@
             const ambientLight = new THREE.AmbientLight(0xffffff, 4); // Reduce intensity
             scene.add(ambientLight);
 
-            const keyLight = new THREE.DirectionalLight(0xffffff, 4); // Main light
+            const keyLight = new THREE.DirectionalLight(0xffffff, 3); // Main light
             keyLight.position.set(10, 20, 10);
             keyLight.castShadow = true;
             scene.add(keyLight);
@@ -56,7 +56,7 @@
             fillLight.position.set(-10, 10, 10);
             scene.add(fillLight);
 
-            const backLight = new THREE.DirectionalLight(0xffffff, 3); // Reduces overexposure
+            const backLight = new THREE.DirectionalLight(0xffffff, 1.2); // Reduces overexposure
             backLight.position.set(0, -10, -10);
             scene.add(backLight);
 
@@ -78,9 +78,9 @@
                             node.castShadow = true;
                             node.receiveShadow = true;
                             if (node.material) {
-                                node.material.envMapIntensity = 0.1; // Reduce harsh reflections
-                                node.material.metalness = 0.4; // Slightly reduce metal effect
-                                node.material.roughness = 0.2; // Make reflections softer
+                                node.material.envMapIntensity = 0.6; // Reduce harsh reflections
+                                node.material.metalness = 0.6; // Slightly reduce metal effect
+                                node.material.roughness = 0.5; // Make reflections softer
                             }
                         }
                         // Apply normal smoothing to fix faceted look
