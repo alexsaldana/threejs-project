@@ -78,9 +78,9 @@
                             node.castShadow = true;
                             node.receiveShadow = true;
                             if (node.material) {
-                                node.material.envMapIntensity = 1; // Reduce harsh reflections
-                                node.material.metalness = .9; // Slightly reduce metal effect
-                                node.material.roughness = .4; // Make reflections softer
+                                node.material.envMapIntensity = .9; // Reduce harsh reflections
+                                node.material.metalness = .7; // Slightly reduce metal effect
+                                node.material.roughness = .3; // Make reflections softer
                             }
                         }
                         // Apply normal smoothing to fix faceted look
@@ -104,7 +104,7 @@
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
-            controls.rotateSpeed = 0.5;
+            controls.rotateSpeed = 0.05;
 
             // 9. Handle Window Resize
             window.addEventListener('resize', () => {
@@ -117,15 +117,15 @@
         }
 
         function animate() {
-            requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 
-            if (model && rotateModel) { // Rotate only if enabled
-                model.rotation.y += 0.01;
-            }
+    if (model && rotateModel) { 
+        model.rotation.y -= rotationSpeed; // Use '-' for clockwise, '+' for counterclockwise
+    }
 
-            controls.update();
-            renderer.render(scene, camera);
-        }
+    controls.update();
+    renderer.render(scene, camera);
+}
 
         init();
     </script>
