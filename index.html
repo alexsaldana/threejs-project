@@ -23,13 +23,21 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // 4. Add Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Soft light
+        // 1. Ambient Light (Soft Global Light)
+const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Increase intensity (default is 1)
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Stronger light
-directionalLight.position.set(2, 10, 5);
+// 2. Directional Light (Stronger, Adds Shadows)
+const directionalLight = new THREE.DirectionalLight(0xffffff, 3); // Increase intensity
+directionalLight.position.set(10, 10, 10); // Move light above model
+directionalLight.castShadow = true; // Enable shadows
 scene.add(directionalLight);
+
+// 3. Add a Spotlight (For More Highlights)
+const spotLight = new THREE.SpotLight(0xffffff, 5); // Strong focused light
+spotLight.position.set(0, 15, 10);
+spotLight.castShadow = true;
+scene.add(spotLight);
 
         // 5. Setup GLTFLoader & DRACOLoader
         const loader = new THREE.GLTFLoader();
@@ -42,7 +50,7 @@ scene.add(directionalLight);
     'model.glb',
     function (gltf) {
         const model = gltf.scene;
-        model.scale.set(600, 600, 600); // Scale up the model
+        model.scale.set(100, 100, 100); // Scale up the model
         scene.add(model);
         console.log("Model loaded successfully!");
     },
