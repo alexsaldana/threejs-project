@@ -6,11 +6,11 @@
     <title>Three.js 3D Viewer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/DRACOLoader.js"></script>
 </head>
 <body>
 
     <script>
-        // Three.js script now runs AFTER the DOM is fully loaded
         // 1. Create Scene
         const scene = new THREE.Scene();
 
@@ -21,19 +21,25 @@
         // 3. Create Renderer
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);  // ✅ FIX: Now runs only after the body is ready
+        document.body.appendChild(renderer.domElement);
 
         // 4. Add Lighting
         const light = new THREE.AmbientLight(0xffffff, 1);
         scene.add(light);
 
-        // 5. Load the 3D Model
+        // 5. Setup GLTFLoader & DRACOLoader
         const loader = new THREE.GLTFLoader();
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/'); // Use Google's Draco Decoder
+        loader.setDRACOLoader(dracoLoader);
+
+        // 6. Load the 3D Model
         loader.load(
-            'model.glb',  // Make sure this file exists in the correct path
+            'model.glb',  // Ensure the model is in the right path
             function (gltf) {
                 const model = gltf.scene;
                 scene.add(model);
+                console.log("Model loaded successfully!");
             },
             function (xhr) {
                 console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -43,14 +49,14 @@
             }
         );
 
-        // 6. Animation Loop
+        // 7. Animation Loop
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
         animate();
 
-        // 7. Handle Window Resize
+        // 8. Handle Window Resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
