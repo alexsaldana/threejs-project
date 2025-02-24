@@ -79,8 +79,8 @@
                             node.receiveShadow = true;
                             if (node.material) {
                                 node.material.envMapIntensity = 1; // Reduce harsh reflections
-                                node.material.metalness = 1; // Slightly reduce metal effect
-                                node.material.roughness = 1; // Make reflections softer
+                                node.material.metalness = .5; // Slightly reduce metal effect
+                                node.material.roughness = .8; // Make reflections softer
                             }
                         }
                         // Apply normal smoothing to fix faceted look
