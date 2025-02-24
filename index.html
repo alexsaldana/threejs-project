@@ -24,11 +24,11 @@
         document.body.appendChild(renderer.domElement);
 
         // 4. Add Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 5); // Soft light
+const ambientLight = new THREE.AmbientLight(0xffffff, 2); // Soft light
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 5); // Stronger light
-directionalLight.position.set(5, 10, 5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Stronger light
+directionalLight.position.set(2, 10, 5);
 scene.add(directionalLight);
 
         // 5. Setup GLTFLoader & DRACOLoader
@@ -42,7 +42,7 @@ scene.add(directionalLight);
     'model.glb',
     function (gltf) {
         const model = gltf.scene;
-        model.scale.set(900, 900, 900); // Scale up the model
+        model.scale.set(600, 600, 600); // Scale up the model
         scene.add(model);
         console.log("Model loaded successfully!");
     },
