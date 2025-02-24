@@ -21,48 +21,63 @@
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xffffff); // Set background to white
 
-            // 2. Create Camera
+            // 2. Load an Environment Map (HDRI for Reflections)
+            const loader = new THREE.TextureLoader();
+            const envMap = loader.load('https://threejsfundamentals.org/threejs/resources/images/wall.jpg');
+            scene.environment = envMap;
+
+            // 3. Create Camera
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.set(0, 5, 20);
 
-            // 3. Create Renderer
+            // 4. Create Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.shadowMap.enabled = true;
             document.body.appendChild(renderer.domElement);
 
-            // 4. Add Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+            // 5. Add Better Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 4); // Brighter Global Light
             scene.add(ambientLight);
 
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
-            directionalLight.position.set(10, 10, 10);
-            directionalLight.castShadow = true;
-            scene.add(directionalLight);
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 4);
+            dirLight1.position.set(10, 10, 10);
+            dirLight1.castShadow = true;
+            scene.add(dirLight1);
 
-            const spotLight = new THREE.SpotLight(0xffffff, 7);
-            spotLight.position.set(0, 15, 10);
-            spotLight.castShadow = true;
-            scene.add(spotLight);
+            const dirLight2 = new THREE.DirectionalLight(0xffffff, 2);
+            dirLight2.position.set(-10, 10, -10);
+            scene.add(dirLight2);
 
-            // 5. Setup GLTFLoader & DRACOLoader
-            const loader = new THREE.GLTFLoader();
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 3);
+            hemiLight.position.set(0, 20, 0);
+            scene.add(hemiLight);
+
+            // 6. Setup GLTFLoader & DRACOLoader
+            const gltfLoader = new THREE.GLTFLoader();
             const dracoLoader = new THREE.DRACOLoader();
             dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-            loader.setDRACOLoader(dracoLoader);
+            gltfLoader.setDRACOLoader(dracoLoader);
 
-            // 6. Load the 3D Model
-            loader.load(
+            // 7. Load the 3D Model
+            gltfLoader.load(
                 'model.glb',
                 function (gltf) {
                     model = gltf.scene;
                     model.scale.set(10, 10, 10);
+
                     model.traverse((node) => {
                         if (node.isMesh) {
                             node.castShadow = true;
                             node.receiveShadow = true;
+                            if (node.material) {
+                                node.material.envMapIntensity = 2; // Increase reflections
+                                node.material.metalness = 1; // Ensure metal reflects
+                                node.material.roughness = 0.3; // Slight shine
+                            }
                         }
                     });
+
                     scene.add(model);
                     console.log("Model loaded successfully!");
                 },
@@ -74,13 +89,13 @@
                 }
             );
 
-            // 7. Enable Orbit Controls
+            // 8. Enable Orbit Controls
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
             controls.dampingFactor = 0.05;
             controls.rotateSpeed = 0.5;
 
-            // 8. Handle Window Resize
+            // 9. Handle Window Resize
             window.addEventListener('resize', () => {
                 camera.aspect = window.innerWidth / window.innerHeight;
                 camera.updateProjectionMatrix();
