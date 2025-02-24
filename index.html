@@ -31,12 +31,12 @@
             const ambientLight = new THREE.AmbientLight(0xffffff, 3); // Brighter ambient light
             scene.add(ambientLight);
 
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 20);
             directionalLight.position.set(10, 10, 10);
             directionalLight.castShadow = true; // Enable shadows
             scene.add(directionalLight);
 
-            const spotLight = new THREE.SpotLight(0xffffff, 7);
+            const spotLight = new THREE.SpotLight(0xffffff, 20);
             spotLight.position.set(0, 15, 10);
             spotLight.castShadow = true;
             scene.add(spotLight);
