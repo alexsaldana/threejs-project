@@ -50,7 +50,7 @@ scene.add(spotLight);
     'model.glb',
     function (gltf) {
         const model = gltf.scene;
-        model.scale.set(50, 50, 50
+        model.scale.set(20, 20, 20
         ); // Scale up the model
         scene.add(model);
         console.log("Model loaded successfully!");
@@ -63,12 +63,15 @@ scene.add(spotLight);
     }
 );
 
-        // 7. Animation Loop
-        function animate() {
-            requestAnimationFrame(animate);
-            renderer.render(scene, camera);
-        }
-        animate();
+function animate() {
+    requestAnimationFrame(animate);
+    
+    if (model) { // Ensure model exists before rotating
+        model.rotation.y += 0.01; // Rotate around the Y-axis (adjust speed as needed)
+    }
+
+    renderer.render(scene, camera);
+}
 
         // 8. Handle Window Resize
         window.addEventListener('resize', () => {
